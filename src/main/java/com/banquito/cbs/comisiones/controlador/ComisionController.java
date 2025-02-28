@@ -1,7 +1,9 @@
 package com.banquito.cbs.comisiones.controlador;
 
 import com.banquito.cbs.comisiones.modelo.Comision;
+import com.banquito.cbs.comisiones.modelo.CobroComision;
 import com.banquito.cbs.comisiones.servicio.ComisionService;
+import com.banquito.cbs.comisiones.servicio.CobroComisionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +15,12 @@ import java.util.List;
 @RequestMapping("/v1/comisiones")
 public class ComisionController {
     private final ComisionService comisionService;
+    private final CobroComisionService cobroComisionService;
     private static final Logger logger = LoggerFactory.getLogger(ComisionController.class);
 
-    public ComisionController(ComisionService comisionService) {
+    public ComisionController(ComisionService comisionService, CobroComisionService cobroComisionService) {
         this.comisionService = comisionService;
+        this.cobroComisionService = cobroComisionService;
     }
 
     @PostMapping
@@ -53,5 +57,12 @@ public class ComisionController {
         logger.info("Solicitud para eliminar comision con id: {}", id);
         comisionService.eliminarComision(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/cobro")
+    public ResponseEntity<Void> realizarCobro(@RequestBody CobroComision cobroComision) {
+        logger.info("Solicitud para realizar cobro de comision: {}", cobroComision);
+        cobroComisionService.procesarCobro(cobroComision);
+        return ResponseEntity.ok().build();
     }
 }
