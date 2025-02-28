@@ -1,5 +1,6 @@
 package com.banquito.cbs.comisiones.servicio;
 
+import com.banquito.cbs.comisiones.dto.ComisionRespuestaDto;
 import com.banquito.cbs.comisiones.modelo.Comision;
 import com.banquito.cbs.comisiones.repositorio.ComisionRepository;
 import org.slf4j.Logger;
@@ -42,5 +43,18 @@ public class ComisionService {
     public void eliminarComision(Integer id) {
         logger.info("Eliminando comision con id: {}", id);
         comisionRepository.deleteById(id);
+    }
+
+    public ComisionRespuestaDto toDto(Comision comision) {
+        ComisionRespuestaDto dto = new ComisionRespuestaDto();
+        dto.setId(comision.getId());
+        dto.setIdCuenta(comision.getIdCuenta());
+        dto.setFecha(comision.getFecha());
+        dto.setTotalTransacciones(comision.getTotalTransacciones());
+        dto.setMontoTotal(comision.getMontoTotal());
+        dto.setTotalComision(comision.getTotalComision());
+        dto.setDetalleTransacciones(comision.getDetalleTransacciones());
+        dto.setEstado(comision.getEstado());
+        return dto;
     }
 }
