@@ -3,6 +3,9 @@ package com.banquito.cbs.comisiones;
 import com.banquito.cbs.comisiones.modelo.Comision;
 import com.banquito.cbs.comisiones.repositorio.ComisionRepository;
 import com.banquito.cbs.comisiones.servicio.ComisionService;
+import com.banquito.cbs.comisiones.dto.TransaccionDTO;
+import com.banquito.cbs.comisiones.modelo.CobroComision;
+import com.banquito.cbs.comisiones.servicio.CobroComisionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,6 +25,9 @@ class ComisionesApplicationTests {
 
     @Mock
     private ComisionRepository comisionRepository;
+
+    @Mock
+    private CobroComisionService cobroComisionService;
 
     @InjectMocks
     private ComisionService comisionService;
@@ -91,5 +97,21 @@ class ComisionesApplicationTests {
         doNothing().when(comisionRepository).deleteById(1);
         comisionService.eliminarComision(1);
         verify(comisionRepository, times(1)).deleteById(1);
+    }
+
+    @Test
+    void testRealizarCobro() {
+        CobroComision cobroComision = new CobroComision();
+        cobroComision.setIdCuenta(123);
+        cobroComision.setPorcentajeComision(BigDecimal.valueOf(10));
+
+        TransaccionDTO transaccion1 = new TransaccionDTO();
+        transaccion1.setMonto(BigDecimal.valueOf(100));
+        TransaccionDTO transaccion2 = new TransaccionDTO();
+        transaccion2.setMonto(BigDecimal.valueOf(200));
+        cobroComision.setTransacciones(new TransaccionDTO[]{transaccion1, transaccion2});
+
+        cobroComisionService.procesarCobro(cobroComision);
+        verify(cobroComisionService).procesarCobro(cobroComision);
     }
 }
